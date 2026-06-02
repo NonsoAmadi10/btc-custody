@@ -51,7 +51,7 @@ SOFTHSM2_SLOT=$SLOT \
 go test ./... -v
 ```
 
-Expected: **13 tests pass** (6 FROST DKG + 4 HSM + 3 PSBT).
+Expected: **36 tests pass** (6 FROST DKG + 4 HSM + 3 PSBT + 23 Policy).
 
 ## What has been built
 
@@ -60,16 +60,18 @@ Expected: **13 tests pass** (6 FROST DKG + 4 HSM + 3 PSBT).
 | `internal/frost` | Full FROST DKG: polynomial secret sharing, Feldman VSS, Round1/ShareFor/Finalise |
 | `internal/hsm` | PKCS#11 key-share storage via SoftHSM2: StoreShare, SignHMAC (CKM_SHA256_HMAC in-HSM), DeleteShare |
 | `internal/psbt` | PSBT construction and FROST threshold signing for Taproot: Builder, NonceCommitment, Sign, Aggregate |
+| `internal/policy` | Transaction authorization rules: Whitelist, Velocity, Tiered, Schedule, Quorum |
 
 ### Key files
 
 - `docs/architecture.md` -- system design, four components, STRIDE threat model
 - `docs/frost-mathematics.md` -- Shamir, Feldman VSS, FROST DKG from first principles with code references
+- `docs/frost-signing-deep-dive.md` -- comprehensive crypto explainer for interviews
 
 ## What is next
 
-1. ~~**PSBT construction**~~ ✅ -- `internal/psbt/` -- PSBT building, Taproot address derivation, FROST signing (nonce generation, partial signatures, aggregation)
-2. **Policy engine** -- `internal/policy/` -- whitelist, velocity limits, business-hours check, approver quorum, tier routing, duress protocol
+1. ~~**PSBT construction**~~ ✅ -- `internal/psbt/` -- PSBT building, Taproot address derivation, FROST signing
+2. ~~**Policy engine**~~ ✅ -- `internal/policy/` -- whitelist, velocity limits, business-hours, approver quorum, tiered approvals
 3. **Wallet infrastructure** -- `internal/wallet/` -- hot/cold address management, UTXO tracking on Bitcoin testnet
 4. **Integration** -- wire all four components into a single ceremony + sweep flow
 5. **Threat model validation** -- attempt to violate each control

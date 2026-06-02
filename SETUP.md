@@ -51,7 +51,7 @@ SOFTHSM2_SLOT=$SLOT \
 go test ./... -v
 ```
 
-Expected: **10 tests pass** (6 FROST DKG + 4 HSM).
+Expected: **13 tests pass** (6 FROST DKG + 4 HSM + 3 PSBT).
 
 ## What has been built
 
@@ -59,6 +59,7 @@ Expected: **10 tests pass** (6 FROST DKG + 4 HSM).
 |---------|-------------|
 | `internal/frost` | Full FROST DKG: polynomial secret sharing, Feldman VSS, Round1/ShareFor/Finalise |
 | `internal/hsm` | PKCS#11 key-share storage via SoftHSM2: StoreShare, SignHMAC (CKM_SHA256_HMAC in-HSM), DeleteShare |
+| `internal/psbt` | PSBT construction and FROST threshold signing for Taproot: Builder, NonceCommitment, Sign, Aggregate |
 
 ### Key files
 
@@ -67,7 +68,7 @@ Expected: **10 tests pass** (6 FROST DKG + 4 HSM).
 
 ## What is next
 
-1. **PSBT construction** -- `internal/psbt/` -- build and parse Bitcoin PSBTs for the hot->cold sweep flow, simulate the air gap with file-based transport
+1. ~~**PSBT construction**~~ ✅ -- `internal/psbt/` -- PSBT building, Taproot address derivation, FROST signing (nonce generation, partial signatures, aggregation)
 2. **Policy engine** -- `internal/policy/` -- whitelist, velocity limits, business-hours check, approver quorum, tier routing, duress protocol
 3. **Wallet infrastructure** -- `internal/wallet/` -- hot/cold address management, UTXO tracking on Bitcoin testnet
 4. **Integration** -- wire all four components into a single ceremony + sweep flow

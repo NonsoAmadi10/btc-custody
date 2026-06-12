@@ -13,6 +13,7 @@
 //
 // The DKG uses Feldman Verifiable Secret Sharing (VSS) over the secp256k1
 // scalar field:
+// nolint: misspell
 //
 //	Round 1 (broadcast):
 //	  Each participant i generates a random polynomial f_i(x) of degree t-1.
@@ -172,9 +173,12 @@ func newRandomPolynomial(threshold uint32) (*polynomial, error) {
 // evaluate computes f(x) using Horner's method.
 //
 // Horner's method rewrites:
-//   f(x) = a_0 + a_1*x + a_2*x^2 + ... + a_(t-1)*x^(t-1)
+//
+//	f(x) = a_0 + a_1*x + a_2*x^2 + ... + a_(t-1)*x^(t-1)
+//
 // as:
-//   f(x) = a_0 + x*(a_1 + x*(a_2 + ... + x*a_(t-1)))
+//
+//	f(x) = a_0 + x*(a_1 + x*(a_2 + ... + x*a_(t-1)))
 //
 // This requires only t-1 multiplications and t-1 additions instead of the
 // naive O(t^2) approach. More importantly, it avoids computing x^k directly,
@@ -270,7 +274,7 @@ type Participant struct {
 	Threshold uint32 // t: minimum participants required to sign
 	Total     uint32 // n: total participants in the ceremony
 
-	poly        *polynomial          // secret polynomial; never shared
+	poly        *polynomial           // secret polynomial; never shared
 	commitments []btcec.JacobianPoint // our own Feldman commitments (public)
 }
 

@@ -51,7 +51,7 @@ SOFTHSM2_SLOT=$SLOT \
 go test ./... -v
 ```
 
-Expected: **36 tests pass** (6 FROST DKG + 4 HSM + 3 PSBT + 23 Policy).
+Expected: **53 tests pass** (6 FROST DKG + 4 HSM + 3 PSBT + 23 Policy + 17 Wallet).
 
 ## What has been built
 
@@ -61,6 +61,7 @@ Expected: **36 tests pass** (6 FROST DKG + 4 HSM + 3 PSBT + 23 Policy).
 | `internal/hsm` | PKCS#11 key-share storage via SoftHSM2: StoreShare, SignHMAC (CKM_SHA256_HMAC in-HSM), DeleteShare |
 | `internal/psbt` | PSBT construction and FROST threshold signing for Taproot: Builder, NonceCommitment, Sign, Aggregate |
 | `internal/policy` | Transaction authorization rules: Whitelist, Velocity, Tiered, Schedule, Quorum |
+| `internal/wallet` | Address derivation, UTXO tracking, blockchain queries via mempool.space API |
 
 ### Key files
 
@@ -72,8 +73,8 @@ Expected: **36 tests pass** (6 FROST DKG + 4 HSM + 3 PSBT + 23 Policy).
 
 1. ~~**PSBT construction**~~ ✅ -- `internal/psbt/` -- PSBT building, Taproot address derivation, FROST signing
 2. ~~**Policy engine**~~ ✅ -- `internal/policy/` -- whitelist, velocity limits, business-hours, approver quorum, tiered approvals
-3. **Wallet infrastructure** -- `internal/wallet/` -- hot/cold address management, UTXO tracking on Bitcoin testnet
-4. **Integration** -- wire all four components into a single ceremony + sweep flow
+3. ~~**Wallet infrastructure**~~ ✅ -- `internal/wallet/` -- hot/cold address derivation, UTXO tracking, mempool.space client
+4. **Integration** -- wire all five components into a single ceremony + sweep flow
 5. **Threat model validation** -- attempt to violate each control
 
 ## Environment variables reference

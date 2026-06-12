@@ -113,14 +113,14 @@ func main() {
 	if err != nil {
 		fatal("Failed to get deposit address: %v", err)
 	}
-	
+
 	// Get PkScript from the deriver
 	deriver := wallet.NewAddressDeriver(groupKey, &chaincfg.TestNet3Params)
 	addr, err := deriver.DeriveHot(0)
 	if err != nil {
 		fatal("Failed to derive address: %v", err)
 	}
-	
+
 	printSuccess("Wallet initialized!")
 	fmt.Printf("  Deposit address: %s%s%s\n", colorYellow, addrStr, colorReset)
 	fmt.Println()

@@ -36,7 +36,7 @@ type TieredConfig struct {
 
 // TierConfig is a single tier in the tiered rule.
 type TierConfig struct {
-	MaxAmount         int64  `yaml:"max_amount"`         // -1 for unlimited
+	MaxAmount         int64  `yaml:"max_amount"` // -1 for unlimited
 	RequiredApprovals int    `yaml:"required_approvals"`
 	Label             string `yaml:"label"`
 }
@@ -44,7 +44,7 @@ type TierConfig struct {
 // QuorumConfig configures the quorum rule.
 type QuorumConfig struct {
 	RequiredCount  int               `yaml:"required_count"`
-	ValidApprovers map[string]string `yaml:"valid_approvers"` // id -> name
+	ValidApprovers map[string]string `yaml:"valid_approvers"`  // id -> name
 	MaxApprovalAge string            `yaml:"max_approval_age"` // duration string
 }
 

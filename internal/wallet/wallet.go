@@ -69,11 +69,11 @@ func NewWallet(cfg WalletConfig) (*Wallet, error) {
 	}
 
 	return &Wallet{
-		deriver:      NewAddressDeriver(cfg.GroupPubKey, cfg.Network),
-		utxos:        NewUTXOSet(),
-		client:       cfg.Client,
-		gapLimit:     gapLimit,
-		hotAddresses: make([]*DerivedAddress, 0),
+		deriver:       NewAddressDeriver(cfg.GroupPubKey, cfg.Network),
+		utxos:         NewUTXOSet(),
+		client:        cfg.Client,
+		gapLimit:      gapLimit,
+		hotAddresses:  make([]*DerivedAddress, 0),
 		coldAddresses: make([]*DerivedAddress, 0),
 	}, nil
 }

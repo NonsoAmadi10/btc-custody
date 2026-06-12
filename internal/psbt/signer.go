@@ -16,10 +16,10 @@
 //
 //	Aggregate nonce commitment:
 //	  R = sum(D_i + ρ_i·E_i)  where ρ_i = H(i, msg, {D,E})
-//	
+//
 //	Challenge:
 //	  c = H_BIP340(R || P || msg)
-//	
+//
 //	Partial signature:
 //	  z_i = d_i + e_i·ρ_i + λ_i·x_i·c
 //	        └─────────────┘   └───────┘
@@ -414,7 +414,8 @@ func computeChallenge(R *btcec.JacobianPoint, P *btcec.PublicKey, msg []byte) *b
 // lagrangeCoefficient computes λ_i for participant i given the set of signers.
 //
 // λ_i = product over j≠i of (0 - j) / (i - j)
-//     = product over j≠i of j / (j - i)
+//
+//	= product over j≠i of j / (j - i)
 //
 // This determines each signer's "weight" in the final signature.
 // It's the same Lagrange interpolation used in Shamir, but evaluated at x=0.

@@ -212,7 +212,7 @@ func TestTiered_RequireApprovalLarge(t *testing.T) {
 		{MaxAmount: -1, RequiredApprovals: 2, Label: "large"},
 	})
 	req := &TransactionRequest{
-		TotalAmount: 500_000, // over 100k, needs 2 approvals
+		TotalAmount: 500_000,      // over 100k, needs 2 approvals
 		Approvals:   []Approval{}, // no approvals
 	}
 
@@ -412,7 +412,7 @@ func TestFullPolicyEvaluation(t *testing.T) {
 	})
 
 	schedule, _ := NewScheduleRule(ScheduleConfig{
-		StartHour: 0,  // allow all hours for test
+		StartHour: 0, // allow all hours for test
 		EndHour:   24,
 		AllowedDays: []time.Weekday{
 			time.Sunday, time.Monday, time.Tuesday,

@@ -178,7 +178,7 @@ func (c *MempoolClient) BroadcastTx(ctx context.Context, txHex string) (string, 
 	req.Header.Set("Content-Type", "text/plain")
 
 	// Set body manually since we're sending raw hex
-	req, err = http.NewRequestWithContext(ctx, "POST", url, 
+	req, err = http.NewRequestWithContext(ctx, "POST", url,
 		io.NopCloser(stringReader(txHex)))
 	if err != nil {
 		return "", fmt.Errorf("creating request: %w", err)

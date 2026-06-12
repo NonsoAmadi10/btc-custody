@@ -71,3 +71,13 @@ func (e *Engine) EvaluateAll(req *TransactionRequest) []Decision {
 func (e *Engine) Rules() []Rule {
 	return e.rules
 }
+
+// RecordTransaction updates stateful rules (like velocity) after a transaction
+// is successfully signed. Call this after signing completes.
+func (e *Engine) RecordTransaction(amount int64) {
+	for _, rule := range e.rules {
+		if vr, ok := rule.(*VelocityRule); ok {
+			vr.RecordTransaction(amount)
+		}
+	}
+}

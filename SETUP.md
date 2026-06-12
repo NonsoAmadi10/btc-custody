@@ -51,7 +51,7 @@ SOFTHSM2_SLOT=$SLOT \
 go test ./... -v
 ```
 
-Expected: **54 tests pass** (6 FROST DKG + 3 HSM skipped + 3 PSBT + 23 Policy + 17 Wallet + 5 Custody).
+Expected: **63 tests pass** (6 FROST DKG + 3 HSM skipped + 3 PSBT + 23 Policy + 17 Wallet + 14 Custody).
 
 ## What has been built
 
@@ -63,12 +63,15 @@ Expected: **54 tests pass** (6 FROST DKG + 3 HSM skipped + 3 PSBT + 23 Policy + 
 | `internal/policy` | Transaction authorization rules: Whitelist, Velocity, Tiered, Schedule, Quorum |
 | `internal/wallet` | Address derivation, UTXO tracking, blockchain queries via mempool.space API |
 | `internal/custody` | Main orchestrator: DKG ceremony, wallet init, policy-checked spending, full integration |
+| `cmd/custody` | Interactive demo CLI for walkthrough |
+| `cmd/testnet` | Real testnet CLI for Bitcoin testnet deployment |
 
 ### Key files
 
 - `docs/architecture.md` -- system design, four components, STRIDE threat model
 - `docs/frost-mathematics.md` -- Shamir, Feldman VSS, FROST DKG from first principles with code references
 - `docs/frost-signing-deep-dive.md` -- comprehensive crypto explainer for interviews
+- `docs/testnet-deployment.md` -- guide for deploying to Bitcoin testnet
 
 ## What is next
 
@@ -76,8 +79,25 @@ Expected: **54 tests pass** (6 FROST DKG + 3 HSM skipped + 3 PSBT + 23 Policy + 
 2. ~~**Policy engine**~~ ✅ -- `internal/policy/` -- whitelist, velocity limits, business-hours, approver quorum, tiered approvals
 3. ~~**Wallet infrastructure**~~ ✅ -- `internal/wallet/` -- hot/cold address derivation, UTXO tracking, mempool.space client
 4. ~~**Integration**~~ ✅ -- `internal/custody/` -- full orchestration: DKG → deposit → policy check → threshold sign → broadcast
-5. **CLI Demo** -- `cmd/custody/` -- interactive demo of full custody flow
-6. **Threat model validation** -- attempt to violate each control
+5. ~~**CLI Demo**~~ ✅ -- `cmd/custody/` -- interactive demo of full custody flow
+6. ~~**Threat model validation**~~ ✅ -- 9 security tests validating STRIDE controls
+7. ~~**Testnet deployment**~~ ✅ -- `cmd/testnet/` + `docs/testnet-deployment.md`
+
+## Quick Start
+
+```bash
+# Run all tests
+go test ./...
+
+# Interactive demo (mock blockchain)
+go run ./cmd/custody
+
+# Real testnet
+go run ./cmd/testnet init
+go run ./cmd/testnet deposit
+go run ./cmd/testnet balance
+go run ./cmd/testnet spend
+```
 
 ## Environment variables reference
 

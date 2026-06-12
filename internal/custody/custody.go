@@ -469,6 +469,9 @@ func (c *CustodySystem) Spend(ctx context.Context, req SpendRequest, broadcast b
 	}
 	txHex := fmt.Sprintf("%x", txBuf)
 
+	// Record transaction in policy engine for velocity tracking
+	c.policy.RecordTransaction(totalAmount)
+
 	result := &SpendResult{
 		RawTx:          txHex,
 		Fee:            buildResult.Fee,

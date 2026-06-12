@@ -1,18 +1,14 @@
 # BTC Custody
 
-[![Go](https://github.com/NonsoAmadi10/btc-custody/actions/workflows/ci.yml/badge.svg)](https://github.com/NonsoAmadi10/btc-custody/actions/workflows/ci.yml)
+[![CI](https://github.com/NonsoAmadi10/btc-custody/actions/workflows/ci.yml/badge.svg)](https://github.com/NonsoAmadi10/btc-custody/actions/workflows/ci.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/NonsoAmadi10/btc-custody)](https://goreportcard.com/report/github.com/NonsoAmadi10/btc-custody)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A **production-grade Bitcoin custody system** implementing FROST threshold signatures for Taproot. No single party ever sees the full private key—not at generation, not at signing.
+A Bitcoin custody system implementing FROST threshold signatures for Taproot. The private key is never assembled—not at generation, not at signing.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Bitcoin-Taproot-orange" alt="Bitcoin Taproot"/>
-  <img src="https://img.shields.io/badge/Signatures-FROST%20Threshold-blue" alt="FROST"/>
-  <img src="https://img.shields.io/badge/Tests-63%20passing-brightgreen" alt="Tests"/>
-</p>
+## Overview
 
-## What This Does
+This system enables t-of-n threshold signing for Bitcoin transactions. Any subset of t participants can collaboratively sign a transaction without any party ever possessing the complete private key.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -32,7 +28,7 @@ A **production-grade Bitcoin custody system** implementing FROST threshold signa
 │                    └────────┬────────┘                          │
 │                             │                                    │
 │                    ┌────────▼────────┐                          │
-│                    │ Taproot Address │  ← tb1p...               │
+│                    │ Taproot Address │  tb1p...                 │
 │                    │    (P2TR)       │                          │
 │                    └─────────────────┘                          │
 │                                                                  │
@@ -40,18 +36,17 @@ A **production-grade Bitcoin custody system** implementing FROST threshold signa
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### Key Features
+### Features
 
-- **🔐 FROST DKG** — Distributed key generation with no trusted dealer
-- **⚡ Taproot Native** — BIP-341 key-spend paths, indistinguishable from single-sig
-- **🛡️ Policy Engine** — Whitelist, velocity limits, tiered approvals, business hours
-- **💾 HSM Ready** — PKCS#11 interface for hardware security modules
-- **🧪 Battle-tested** — 63 tests including 9 STRIDE threat validations
+- **FROST DKG** — Distributed key generation with no trusted dealer
+- **Taproot Native** — BIP-341 key-spend paths, indistinguishable from single-sig on-chain
+- **Policy Engine** — Whitelist, velocity limits, tiered approvals, business hours
+- **HSM Integration** — PKCS#11 interface for hardware security modules
+- **Tested** — 63 tests including 9 STRIDE threat model validations
 
 ## Quick Start
 
 ```bash
-# Clone
 git clone https://github.com/NonsoAmadi10/btc-custody.git
 cd btc-custody
 
@@ -85,58 +80,59 @@ btc-custody/
 └── docs/
     ├── architecture.md           # System design + STRIDE threat model
     ├── frost-mathematics.md      # Shamir, Feldman VSS, FROST math
-    ├── frost-signing-deep-dive.md # Interview prep guide
+    ├── frost-signing-deep-dive.md # Cryptography deep dive
     └── testnet-deployment.md     # Testnet deployment guide
 ```
 
-## How It Works
+## Usage
 
-### 1. Distributed Key Generation (DKG)
+### Distributed Key Generation
 
 ```go
-// Each participant generates a secret polynomial
-// Shares are distributed so that t-of-n can reconstruct
+system, _ := custody.New(custody.Config{
+    Network:   &chaincfg.TestNet3Params,
+    Threshold: 2,
+    Total:     3,
+})
+
 system.InitializeDKG()
 groupKey, _ := system.RunDKGCeremony()
 // groupKey is public; no party has the private key
 ```
 
-### 2. Policy Evaluation
+### Policy Configuration
 
 ```go
-// Every transaction passes through policy rules
 PolicyConfig{
-    Whitelist: { Addresses: [...], Prefixes: ["tb1p", "tb1q"] },
+    Whitelist: { Prefixes: []string{"tb1p", "tb1q"} },
     Velocity:  { MaxAmount: 10_000_000, Window: "24h" },
     Tiered:    { Tiers: [...] },
 }
 // Deny by default. All rules must pass.
 ```
 
-### 3. Threshold Signing
+### Threshold Signing
 
 ```go
-// Any t-of-n participants can produce a valid signature
 result, _ := system.Spend(ctx, SpendRequest{
     Destinations:  []Recipient{{Address: "tb1q...", Amount: 10000}},
-    SignerIndices: []uint32{1, 2},  // Participants 1 and 2
+    SignerIndices: []uint32{1, 2},  // Any 2 of 3
 }, true)
-// result.TxID contains the broadcast transaction
 ```
 
 ## Policy Rules
 
 | Rule | Description |
 |------|-------------|
-| **Whitelist** | Only approved addresses/prefixes allowed |
-| **Velocity** | Cumulative spending limits per time window |
-| **Tiered** | Approval requirements based on amount |
-| **Schedule** | Business hours restrictions |
-| **Quorum** | Multi-party human approval |
+| Whitelist | Only approved addresses or prefixes allowed |
+| Velocity | Cumulative spending limits per time window |
+| Tiered | Approval requirements based on transaction amount |
+| Schedule | Business hours restrictions |
+| Quorum | Multi-party human approval for large transactions |
 
 ## Security Model
 
-Based on STRIDE threat analysis. See [docs/architecture.md](docs/architecture.md).
+The system implements STRIDE threat modeling. See [docs/architecture.md](docs/architecture.md) for the complete analysis.
 
 | Threat | Mitigation |
 |--------|------------|
@@ -146,22 +142,22 @@ Based on STRIDE threat analysis. See [docs/architecture.md](docs/architecture.md
 | Insider attack | Quorum approvals for large amounts |
 | Key extraction | Shares stored in HSM; no reconstruction API |
 
-### Threat Model Tests
+### Threat Model Validation
 
 ```bash
 go test ./internal/custody/... -run Threat -v
 ```
 
-All 9 threat scenarios validated:
-- ✅ Insufficient signers rejected
-- ✅ Invalid signer index rejected  
-- ✅ Whitelist bypass blocked
-- ✅ Velocity limit enforced
-- ✅ Duplicate signer rejected
-- ✅ Zero signers rejected
-- ✅ Insufficient funds handled
-- ✅ Key shares never assembled
-- ✅ Taproot output key correctly used
+9 attack scenarios validated:
+- Insufficient signers rejected
+- Invalid signer index rejected
+- Whitelist bypass blocked
+- Velocity limit enforced
+- Duplicate signer rejected
+- Zero signers rejected
+- Insufficient funds handled
+- Key shares never assembled
+- Taproot output key correctly used
 
 ## Requirements
 
@@ -178,18 +174,15 @@ apt install golang softhsm2
 
 ## Test Coverage
 
-```
-Package          Tests   Coverage
-───────────────────────────────────
-internal/frost      6    Core DKG + signing
-internal/hsm        3    PKCS#11 (skipped without HSM)
-internal/psbt       3    PSBT + Taproot
-internal/policy    23    All 5 rules
-internal/wallet    17    Address + UTXO + client
-internal/custody   14    Integration + threat tests
-───────────────────────────────────
-Total              63    passing
-```
+| Package | Tests | Description |
+|---------|-------|-------------|
+| internal/frost | 6 | DKG + signing |
+| internal/hsm | 3 | PKCS#11 (requires HSM) |
+| internal/psbt | 3 | PSBT + Taproot |
+| internal/policy | 23 | All 5 rules |
+| internal/wallet | 17 | Address + UTXO |
+| internal/custody | 14 | Integration + threat |
+| **Total** | **63** | |
 
 ## Documentation
 
@@ -197,30 +190,29 @@ Total              63    passing
 |----------|-------------|
 | [architecture.md](docs/architecture.md) | System design, data flows, STRIDE threat model |
 | [frost-mathematics.md](docs/frost-mathematics.md) | Shamir, Feldman VSS, FROST from first principles |
-| [frost-signing-deep-dive.md](docs/frost-signing-deep-dive.md) | Interview-ready crypto explainer |
+| [frost-signing-deep-dive.md](docs/frost-signing-deep-dive.md) | Cryptography deep dive |
 | [testnet-deployment.md](docs/testnet-deployment.md) | Deploy to Bitcoin testnet |
-| [SETUP.md](SETUP.md) | Quick development setup |
+| [SETUP.md](SETUP.md) | Development setup |
 
 ## Production Considerations
 
-This is a **learning prototype**. For production:
+This is a prototype. For production deployment:
 
-- [ ] Replace SoftHSM with hardware HSMs (AWS CloudHSM, YubiHSM)
-- [ ] Add network transport for distributed DKG (gRPC, libp2p)
-- [ ] Implement audit logging and monitoring
-- [ ] Add geographic distribution of signers
-- [ ] Implement cold storage with air-gapped signing
+- Replace SoftHSM with hardware HSMs (AWS CloudHSM, YubiHSM)
+- Add network transport for distributed DKG (gRPC, libp2p)
+- Implement audit logging and monitoring
+- Geographic distribution of signers
+- Air-gapped signing for cold storage
 
-## Concepts Demonstrated
+## Concepts
 
 - Bitcoin Taproot (BIP-341)
 - Schnorr signatures (BIP-340)
 - FROST threshold signatures
 - Shamir's Secret Sharing
-- Feldman VSS
+- Feldman Verifiable Secret Sharing
 - PSBT (BIP-174)
 - PKCS#11 HSM interface
-- Policy engine design
 - STRIDE threat modeling
 
 ## License
@@ -229,12 +221,4 @@ MIT License. See [LICENSE](LICENSE).
 
 ## Author
 
-**Chinonso Amadi** — Platform Engineer → Security Engineer
-
-Building in public. Learning Bitcoin internals, cryptography, and custody systems.
-
----
-
-<p align="center">
-  <i>The private key is never assembled. Not at generation. Not at signing. Ever.</i>
-</p>
+Chinonso Amadi

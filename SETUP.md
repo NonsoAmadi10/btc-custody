@@ -51,7 +51,7 @@ SOFTHSM2_SLOT=$SLOT \
 go test ./... -v
 ```
 
-Expected: **53 tests pass** (6 FROST DKG + 4 HSM + 3 PSBT + 23 Policy + 17 Wallet).
+Expected: **54 tests pass** (6 FROST DKG + 3 HSM skipped + 3 PSBT + 23 Policy + 17 Wallet + 5 Custody).
 
 ## What has been built
 
@@ -62,6 +62,7 @@ Expected: **53 tests pass** (6 FROST DKG + 4 HSM + 3 PSBT + 23 Policy + 17 Walle
 | `internal/psbt` | PSBT construction and FROST threshold signing for Taproot: Builder, NonceCommitment, Sign, Aggregate |
 | `internal/policy` | Transaction authorization rules: Whitelist, Velocity, Tiered, Schedule, Quorum |
 | `internal/wallet` | Address derivation, UTXO tracking, blockchain queries via mempool.space API |
+| `internal/custody` | Main orchestrator: DKG ceremony, wallet init, policy-checked spending, full integration |
 
 ### Key files
 
@@ -74,8 +75,9 @@ Expected: **53 tests pass** (6 FROST DKG + 4 HSM + 3 PSBT + 23 Policy + 17 Walle
 1. ~~**PSBT construction**~~ ✅ -- `internal/psbt/` -- PSBT building, Taproot address derivation, FROST signing
 2. ~~**Policy engine**~~ ✅ -- `internal/policy/` -- whitelist, velocity limits, business-hours, approver quorum, tiered approvals
 3. ~~**Wallet infrastructure**~~ ✅ -- `internal/wallet/` -- hot/cold address derivation, UTXO tracking, mempool.space client
-4. **Integration** -- wire all five components into a single ceremony + sweep flow
-5. **Threat model validation** -- attempt to violate each control
+4. ~~**Integration**~~ ✅ -- `internal/custody/` -- full orchestration: DKG → deposit → policy check → threshold sign → broadcast
+5. **CLI Demo** -- `cmd/custody/` -- interactive demo of full custody flow
+6. **Threat model validation** -- attempt to violate each control
 
 ## Environment variables reference
 

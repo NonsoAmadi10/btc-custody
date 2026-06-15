@@ -1,4 +1,4 @@
-module github.com/NonsoAmadi10/btc-custody
+module github.com/0xciph3r/btc-custody
 
 go 1.25
 

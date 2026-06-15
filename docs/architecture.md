@@ -1,6 +1,6 @@
 # BTC Custody System -- Architecture
 
-**Author:** Chinonso Amadi  
+**Author:** cipher  
 **Status:** Design (pre-implementation)  
 **Last updated:** 2026-05-22
 

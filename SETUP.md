@@ -13,7 +13,7 @@ Go 1.25+ is required (the btcec v2 dependency uses range-over-int).
 ## Clone and install dependencies
 
 ```bash
-git clone https://github.com/NonsoAmadi10/btc-custody.git
+git clone https://github.com/0xciph3r/btc-custody.git
 cd btc-custody
 go mod download
 ```

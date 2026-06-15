@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/NonsoAmadi10/btc-custody/internal/policy"
-	"github.com/NonsoAmadi10/btc-custody/internal/psbt"
-	"github.com/NonsoAmadi10/btc-custody/internal/wallet"
+	"github.com/0xciph3r/btc-custody/internal/policy"
+	"github.com/0xciph3r/btc-custody/internal/psbt"
+	"github.com/0xciph3r/btc-custody/internal/wallet"
 	"github.com/btcsuite/btcd/chaincfg"
 )
 

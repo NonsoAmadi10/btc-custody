@@ -17,7 +17,7 @@ formatters:
   settings:
     goimports:
       local-prefixes:
-        - github.com/NonsoAmadi10/btc-custody
+        - github.com/0xciph3r/btc-custody
 
 linters-settings:
   errcheck:

@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/NonsoAmadi10/btc-custody/internal/hsm"
+	"github.com/0xciph3r/btc-custody/internal/hsm"
 )
 
 // softHSMLib returns the SoftHSM2 PKCS#11 library path.

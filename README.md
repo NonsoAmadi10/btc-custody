@@ -1,7 +1,7 @@
 # BTC Custody
 
-[![CI](https://github.com/NonsoAmadi10/btc-custody/actions/workflows/ci.yml/badge.svg)](https://github.com/NonsoAmadi10/btc-custody/actions/workflows/ci.yml)
-[![Go Report Card](https://goreportcard.com/badge/github.com/NonsoAmadi10/btc-custody)](https://goreportcard.com/report/github.com/NonsoAmadi10/btc-custody)
+[![CI](https://github.com/0xciph3r/btc-custody/actions/workflows/ci.yml/badge.svg)](https://github.com/0xciph3r/btc-custody/actions/workflows/ci.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/0xciph3r/btc-custody)](https://goreportcard.com/report/github.com/0xciph3r/btc-custody)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A Bitcoin custody system implementing FROST threshold signatures for Taproot. The private key is never assembled—not at generation, not at signing.
@@ -47,7 +47,7 @@ This system enables t-of-n threshold signing for Bitcoin transactions. Any subse
 ## Quick Start
 
 ```bash
-git clone https://github.com/NonsoAmadi10/btc-custody.git
+git clone https://github.com/0xciph3r/btc-custody.git
 cd btc-custody
 
 # Run tests
@@ -221,4 +221,4 @@ MIT License. See [LICENSE](LICENSE).
 
 ## Author
 
-Chinonso Amadi
+cipher
